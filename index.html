@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasindu Maduranga | HR Portfolio</title>
+    <meta name="description" content="Data-Driven HR Solutions">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #f4c430;
+            --dark: #1a1a1a;
+            --light: #f8f9fa;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--light);
+            line-height: 1.6;
+        }
+
+        /* Security Modal */
+        .security-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 50000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .security-overlay.active {
+            display: flex;
+        }
+
+        .security-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(244,196,48,0.5);
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .security-box h2 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .security-box p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: var(--dark);
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(244,196,48,0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            right: -500px;
+            width: 500px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.3);
+            z-index: 40000;
+            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow-y: auto;
+        }
+
+        .admin-panel.open {
+            right: 0;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, var(--dark), #333);
+            color: white;
+            padding: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .admin-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-tab {
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .admin-tab.active {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .admin-content {
+            padding: 2rem;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary {
+            background: var(--dark);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Solutions Editor */
+        .solution-editor {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .solution-editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .solution-editor-header h4 {
+            color: var(--dark);
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+            border-radius: 6px;
+        }
+
+        /* Image Upload */
+        .image-upload-area {
+            border: 2px dashed #ddd;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--light);
+        }
+
+        .image-upload-area:hover {
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Save Indicator */
+        .save-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            display: none;
+            z-index: 60000;
+            box-shadow: 0 5px 20px rgba(40,167,69,0.3);
+            animation: slideInRight 0.3s;
+        }
+
+        .save-indicator.show {
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        /* Quick Edit Button */
+        .quick-edit-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 5px 25px rgba(244,196,48,0.6);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 30000;
+            transition: all 0.3s;
+        }
+
+        .quick-edit-btn.visible {
+            display: flex;
+        }
+
+        .quick-edit-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 8px 35px rgba(244,196,48,0.8);
+        }
+
+        /* Portfolio Styles */
+        nav {
+            background: var(--dark);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            border-bottom: 3px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(26,26,26,0.9));
+            color: white;
+            padding: 6rem 5%;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(244,196,48,0.15), transparent);
+            top: -300px;
+            right: -300px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, -30px); }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .hero .subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .hero .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.6;
+        }
+
+        .expertise-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .expertise-tag {
+            background: rgba(244,196,48,0.2);
+            color: var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            border: 2px solid var(--primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .expertise-tag:hover {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .profile-photo {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            border: 5px solid var(--primary);
+            box-shadow: 0 20px 60px rgba(244,196,48,0.5);
+            transition: transform 0.5s;
+            object-fit: cover;
+        }
+
+        .profile-photo:hover {
+            transform: translateY(-15px) scale(1.02);
+        }
+
+        section {
+            padding: 5rem 5%;
+        }
+
+        .about {
+            background: var(--light);
+        }
+
+        .about h2, .solutions h2, .contact h2 {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .about h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 5px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .about h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+
+        .about p {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .skill-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .skill-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 30px rgba(244,196,48,0.2);
+        }
+
+        .skill-item strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+
+        .solutions {
+            background: var(--dark);
+            color: white;
+        }
+
+        .solutions h2 {
+            color: var(--primary);
+        }
+
+        .solutions-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .solution-card {
+            background: rgba(255,255,255,0.05);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 2px solid rgba(244,196,48,0.2);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), #ffd700);
+        }
+
+        .solution-card:hover {
+            transform: translateY(-15px);
+            background: rgba(244,196,48,0.15);
+            border-color: var(--primary);
+            box-shadow: 0 25px 70px rgba(244,196,48,0.4);
+        }
+
+        .solution-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .solution-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .solution-card p {
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: rgba(244,196,48,0.2);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--primary);
+            font-weight: 600;
+        }
+
+        .contact {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            color: white;
+            text-align: center;
+        }
+
+        .contact h2 {
+            color: var(--primary);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .contact-item {
+            background: rgba(244,196,48,0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid rgba(244,196,48,0.3);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .contact-item:hover {
+            background: rgba(244,196,48,0.2);
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .contact-item a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer {
+            background: #000;
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            padding: 2.5rem;
+            border-top: 3px solid var(--primary);
+        }
+
+        footer strong {
+            color: var(--primary);
+        }
+
+        @media (max-width: 968px) {
+            .hero-content, .about-content {
+                grid-template-columns: 1fr;
+            }
+            .admin-panel {
+                width: 100%;
+                right: -100%;
+            }
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+
+        .helper-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        .preview-badge {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: none;
+            z-index: 30000;
+        }
+
+        .preview-badge.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Save Indicator -->
+    <div id="saveIndicator" class="save-indicator">✅ Saved Successfully!</div>
+    
+    <!-- Preview Badge -->
+    <div id="previewBadge" class="preview-badge">👁️ Editing Mode</div>
+
+    <!-- Security Modal -->
+    <div id="securityOverlay" class="security-overlay">
+        <div class="security-box">
+            <h2>🔒 Admin Authentication</h2>
+            <p>Enter credentials to access content management</p>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter admin password">
+                <div class="error-msg" id="passwordError">❌ Incorrect password</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Security Question: What's your HR specialty?</label>
+                <input type="text" id="securityAnswer" placeholder="Your answer">
+                <div class="helper-text">Hint: Analytics, Relations, or Operations</div>
+                <div class="error-msg" id="securityError">❌ Incorrect answer</div>
+            </div>
+            
+            <button class="btn" onclick="authenticate()">🚀 Unlock Admin Panel</button>
+            
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #999;">
+                Default: Password = <strong>admin123</strong><br>
+                Answer = <strong>analytics</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Quick Edit Button -->
+    <button class="quick-edit-btn" id="quickEditBtn" onclick="openAdminPanel()" title="Press Ctrl+E">
+        ⚙️
+    </button>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>⚡ Content Management</h2>
+            <p style="opacity: 0.9;">Auto-saves as you type</p>
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchAdminTab('personal')">Personal</button>
+                <button class="admin-tab" onclick="switchAdminTab('about')">About</button>
+                <button class="admin-tab" onclick="switchAdminTab('solutions')">Solutions</button>
+                <button class="admin-tab" onclick="switchAdminTab('contact')">Contact</button>
+                <button class="admin-tab" onclick="switchAdminTab('images')">Images</button>
+            </div>
+        </div>
+        
+        <div class="admin-content">
+            <!-- Personal Tab -->
+            <div id="tab-personal" class="tab-panel active">
+                <div class="section-title">👤 Personal Information</div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="edit_fullName" oninput="autoSave()">
+                </div>
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" id="edit_jobTitle" oninput="autoSave()">
+                </div>
+                <div class="form-group">
+                    <label>Tagline</label>
+                    <input type="text" id="edit_tagline" oninput="autoSave()">
+                </div>
+                <div class="form-group">
+                    <label>Hero Description</label>
+                    <textarea id="edit_heroDesc" oninput="autoSave()"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Expertise Tags (comma separated)</label>
+                    <input type="text" id="edit_expertiseTags" oninput="autoSave()">
+                    <div class="helper-text">Example: HR Analytics, Employee Relations, Data Visualization</div>
+                </div>
+            </div>
+
+            <!-- About Tab -->
+            <div id="tab-about" class="tab-panel">
+                <div class="section-title">📝 About Section</div>
+                <div class="form-group">
+                    <label>About Title</label>
+                    <input type="text" id="edit_aboutTitle" oninput="autoSave()">
+                </div>
+                <div class="form-group">
+                    <label>Paragraph 1</label>
+                    <textarea id="edit_aboutPara1" oninput="autoSave()"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Paragraph 2</label>
+                    <textarea id="edit_aboutPara2" oninput="autoSave()"></textarea>
+                </div>
+                
+                <div class="section-title">💼 Skills (4 Items)</div>
+                <div class="form-group">
+                    <label>Skill 1 Title</label>
+                    <input type="text" id="edit_skill1Title" oninput="autoSave()" placeholder="📊 HR Analytics">
+                    <textarea id="edit_skill1Desc" oninput="autoSave()" placeholder="Description..." style="margin-top:0.5rem;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Skill 2 Title</label>
+                    <input type="text" id="edit_skill2Title" oninput="autoSave()" placeholder="🤝 Employee Relations">
+                    <textarea id="edit_skill2Desc" oninput="autoSave()" placeholder="Description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Skill 3 Title</label>
+                    <input type="text" id="edit_skill3Title" oninput="autoSave()" placeholder="📈 Data Visualization">
+                    <textarea id="edit_skill3Desc" oninput="autoSave()" placeholder="Description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Skill 4 Title</label>
+                    <input type="text" id="edit_skill4Title" oninput="autoSave()" placeholder="⚙️ HR Operations">
+                    <textarea id="edit_skill4Desc" oninput="autoSave()" placeholder="Description..."></textarea>
+                </div>
+            </div>
+
+            <!-- Solutions Tab -->
+            <div id="tab-solutions" class="tab-panel">
+                <div class="section-title">🚀 HR Solutions</div>
+                <p style="color:#666; margin-bottom:1.5rem;">Edit your solution cards (add/remove coming soon)</p>
+                
+                <div class="solution-editor">
+                    <div class="solution-editor-header">
+                        <h4>Solution 1</h4>
+                    </div>
+                    <div class="form-group">
+                        <label>Icon (emoji)</label>
+                        <input type="text" id="edit_sol1Icon" oninput="autoSave()" maxlength="4" placeholder="📊">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="edit_sol1Title" oninput="autoSave()">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="edit_sol1Desc" oninput="autoSave()"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (comma separated)</label>
+                        <input type="text" id="edit_sol1Tags" oninput="autoSave()">
+                    </div>
+                </div>
+
+                <div class="solution-editor">
+                    <div class="solution-editor-header">
+                        <h4>Solution 2</h4>
+                    </div>
+                    <div class="form-group">
+                        <label>Icon</label>
+                        <input type="text" id="edit_sol2Icon" oninput="autoSave()" maxlength="4" placeholder="🎯">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="edit_sol2Title" oninput="autoSave()">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="edit_sol2Desc" oninput="autoSave()"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags</label>
+                        <input type="text" id="edit_sol2Tags" oninput="autoSave()">
+                    </div>
+                </div>
+
+                <div class="solution-editor">
+                    <div class="solution-editor-header">
+                        <h4>Solution 3</h4>
+                    </div>
+                    <div class="form-group">
+                        <label>Icon</label>
+                        <input type="text" id="edit_sol3Icon" oninput="autoSave()" maxlength="4" placeholder="💰">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="edit_sol3Title" oninput="autoSave()">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="edit_sol3Desc" oninput="autoSave()"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags</label>
+                        <input type="text" id="edit_sol3Tags" oninput="autoSave()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Tab -->
+            <div id="tab-contact" class="tab-panel">
+                <div class="section-title">📧 Contact Information</div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="edit_email" oninput="autoSave()">
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="edit_location" oninput="autoSave()">
+                </div>
+                <div class="form-group">
+                    <label>LinkedIn URL</label>
+                    <input type="url" id="edit_linkedin" oninput="autoSave()">
+                </div>
+                <div class="form-group">
+                    <label>GitHub Username</label>
+                    <input type="text" id="edit_github" oninput="autoSave()">
+                </div>
+            </div>
+
+            <!-- Images Tab -->
+            <div id="tab-images" class="tab-panel">
+                <div class="section-title">📸 Image Management</div>
+                <div class="form-group">
+                    <label>Profile Photo URL</label>
+                    <input type="text" id="edit_profilePhoto" oninput="autoSave()" placeholder="profile.jpg">
+                    <div class="helper-text">Upload to GitHub first, then enter filename (e.g., profile.jpg) or full URL</div>
+                </div>
+                <div class="form-group">
+                    <label>Current Profile Photo Preview</label>
+                    <img id="profilePreview" class="image-preview" src="profile.jpg" alt="Profile Preview">
+                </div>
+                <div class="form-group">
+                    <label>📌 Quick Instructions</label>
+                    <ol style="color:#666; font-size:0.9rem; line-height:1.8; margin-left:1.2rem;">
+                        <li>Save your image as <strong>profile.jpg</strong></li>
+                        <li>Upload to your GitHub repository</li>
+                        <li>Type <strong>profile.jpg</strong> in the field above</li>
+                        <li>Image will update automatically</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="closeAndSave()">✅ Save & Close</button>
+                <button class="btn btn-secondary" onclick="resetToDefaults()">🔄 Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Content -->
+    <nav>
+        <div class="logo" id="display_logo">PASINDU M.</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#solutions">Solutions</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 id="display_fullName">PASINDU MADURANGA</h1>
+                <p class="subtitle" id="display_jobTitle">Aspiring HR Analyst | Data-Driven Insights</p>
+                <p class="tagline" id="display_tagline">Turning Data into Actionable Insights for Business Success</p>
+                <p id="display_heroDesc">Combining analytical rigor with people-first thinking to transform HR practices and drive organizational success.</p>
+                <div class="expertise-tags" id="display_expertiseTags"></div>
+            </div>
+            <div class="hero-image">
+                <img src="profile.jpg" alt="Pasindu Maduranga" class="profile-photo" id="display_profilePhoto">
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>About Me</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3 id="display_aboutTitle">Analytical HR Professional with Data-Driven Mindset</h3>
+                <p id="display_aboutPara1">As an aspiring HR Analyst, I combine people-first thinking with analytical rigor to drive business outcomes.</p>
+                <p id="display_aboutPara2">Passionate about making HR analytics accessible to every organization.</p>
+            </div>
+            <div class="skills-grid" id="display_skills"></div>
+        </div>
+    </section>
+
+    <section id="solutions" class="solutions">
+        <h2>HR Solutions & Tools</h2>
+        <div class="solutions-grid" id="display_solutions"></div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Let's Connect</h2>
+        <p>Ready to transform your HR practices with data-driven insights? Let's collaborate!</p>
+        <div class="contact-info">
+            <div class="contact-item">
+                📧 <a href="mailto:" id="display_email_link"><span id="display_email">pasindumaduranga2k02@gmail.com</span></a>
+            </div>
+            <div class="contact-item">
+                📍 <span id="display_location">Colombo, Sri Lanka</span>
+            </div>
+            <div class="contact-item">
+                💼 <a href="" target="_blank" id="display_linkedin">Connect on LinkedIn</a>
+            </div>
+            <div class="contact-item">
+                💻 <a href="" target="_blank" id="display_github_link">GitHub: <span id="display_github">pasindumaduranga</span></a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p><strong>© 2025 <span id="display_footerName">Pasindu Maduranga</span></strong></p>
+        <p>Aspiring HR Analyst | Turning Data into Actionable Insights for Business Success</p>
+    </footer>
+
+    <script>
+        // SECURITY CREDENTIALS (CHANGE THESE!)
+        const ADMIN_PASSWORD = 'admin123';
+        const SECURITY_ANSWER = 'analytics'; // Answer to security question
+
+        // Default Portfolio Data
+        const defaultData = {
+            fullName: 'Pasindu Jeewantha Maduranga',
+            jobTitle: 'Aspiring HR Analyst | Data-Driven Insights for People & Business',
+            tagline: 'Turning Data into Actionable Insights for Business Success',
+            heroDesc: 'Combining analytical rigor with people-first thinking to transform HR practices and drive organizational success through data-driven strategies.',
+            profilePhoto: 'profile.jpg',
+            expertiseTags: 'HR Analytics, Employee Relations, Data Visualization, HR Operations',
+            aboutTitle: 'Analytical HR Professional with Data-Driven Mindset',
+            aboutPara1: 'As an aspiring HR Analyst, I combine people-first thinking with analytical rigor to drive business outcomes. My approach transforms raw HR data into strategic insights that enhance employee experience and organizational performance.',
+            aboutPara2: 'Passionate about making HR analytics accessible to every organization, I create practical tools and frameworks that deliver measurable impact without expensive software investments.',
+            skill1Title: '📊 HR Analytics',
+            skill1Desc: 'Workforce metrics, predictive modeling, dashboard creation',
+            skill2Title: '🤝 Employee Relations',
+            skill2Desc: 'Engagement strategies, conflict resolution, culture building',
+            skill3Title: '📈 Data Visualization',
+            skill3Desc: 'Interactive reports, KPI tracking, storytelling with data',
+            skill4Title: '⚙️ HR Operations',
+            skill4Desc: 'Process optimization, compliance, strategic planning',
+            sol1Icon: '📊',
+            sol1Title: 'Workforce Analytics Dashboard',
+            sol1Desc: 'Comprehensive HR metrics tracking including turnover rates, time-to-hire, headcount analysis, and predictive workforce planning models.',
+            sol1Tags: 'Analytics, Google Sheets, Free',
+            sol2Icon: '🎯',
+            sol2Title: 'Employee Engagement Framework',
+            sol2Desc: 'Evidence-based engagement measurement with pulse surveys, sentiment analysis, and actionable improvement strategies.',
+            sol2Tags: 'Employee Relations, Framework',
+            sol3Icon: '💰',
+            sol3Title: 'Compensation Analytics Tool',
+            sol3Desc: 'Market benchmarking calculator with equity analysis, cost-per-hire tracking, and total rewards package optimization.',
+            sol3Tags: 'Calculator, Data-Driven',
+            email: 'pasindumaduranga2k02@gmail.com',
+            location: 'Colombo, Sri Lanka',
+            linkedin: 'https://www.linkedin.com/in/pasindu-maduranga-34b7702a6',
+            github: 'pasindumaduranga'
+        };
+
+        // Authentication
+        function authenticate() {
+            const password = document.getElementById('adminPassword').value;
+            const answer = document.getElementById('securityAnswer').value.toLowerCase().trim();
+            
+            let valid = true;
+            
+            if (password !== ADMIN_PASSWORD) {
+                document.getElementById('passwordError').classList.add('show');
+                valid = false;
+            } else {
+                document.getElementById('passwordError').classList.remove('show');
+            }
+            
+            if (answer !== SECURITY_ANSWER) {
+                document.getElementById('securityError').classList.add('show');
+                valid = false;
+            } else {
+                document.getElementById('securityError').classList.remove('show');
+            }
+            
+            if (valid) {
+                localStorage.setItem('adminAuth', 'true');
+                localStorage.setItem('authTime', Date.now());
+                document.getElementById('securityOverlay').classList.remove('active');
+                document.getElementById('quickEditBtn').classList.add('visible');
+                document.getElementById('adminPanel').classList.add('open');
+                document.getElementById('previewBadge').classList.add('show');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('securityAnswer').value = '';
+                showSaveIndicator('🔓 Access Granted!');
+            }
+        }
+
+        // Check authentication on load
+        function checkAuth() {
+            const auth = localStorage.getItem('adminAuth');
+            const authTime = localStorage.getItem('authTime');
+            const oneHour = 60 * 60 * 1000;
+            
+            if (auth === 'true' && authTime && (Date.now() - authTime < oneHour)) {
+                document.getElementById('quickEditBtn').classList.add('visible');
+                return true;
+            }
+            return false;
+        }
+
+        // Open admin panel
+        function openAdminPanel() {
+            if (checkAuth()) {
+                document.getElementById('adminPanel').classList.add('open');
+                document.getElementById('previewBadge').classList.add('show');
+            } else {
+                document.getElementById('securityOverlay').classList.add('active');
+            }
+        }
+
+        // Close and save
+        function closeAndSave() {
+            document.getElementById('adminPanel').classList.remove('open');
+            document.getElementById('previewBadge').classList.remove('show');
+            document.getElementById('quickEditBtn').classList.remove('visible');
+            showSaveIndicator('💾 All Changes Saved!');
+        }
+
+        // Switch admin tabs
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        // Load data
+        function loadData() {
+            try {
+                const stored = localStorage.getItem('portfolioData');
+                return stored ? JSON.parse(stored) : defaultData;
+            } catch(e) {
+                return defaultData;
+            }
+        }
+
+        // Auto save
+        let saveTimeout;
+        function autoSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                const data = {};
+                Object.keys(defaultData).forEach(key => {
+                    const input = document.getElementById('edit_' + key);
+                    if (input) {
+                        data[key] = input.value;
+                    }
+                });
+                localStorage.setItem('portfolioData', JSON.stringify(data));
+                updateDisplay();
+                showSaveIndicator();
+            }, 500);
+        }
+
+        // Show save indicator
+        function showSaveIndicator(message = '✅ Saved!') {
+            const indicator = document.getElementById('saveIndicator');
+            indicator.textContent = message;
+            indicator.classList.add('show');
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+
+        // Update display
+        function updateDisplay() {
+            const data = loadData();
+            
+            // Update text elements
+            document.getElementById('display_fullName').textContent = data.fullName;
+            document.getElementById('display_jobTitle').textContent = data.jobTitle;
+            document.getElementById('display_tagline').textContent = data.tagline;
+            document.getElementById('display_heroDesc').textContent = data.heroDesc;
+            document.getElementById('display_aboutTitle').textContent = data.aboutTitle;
+            document.getElementById('display_aboutPara1').textContent = data.aboutPara1;
+            document.getElementById('display_aboutPara2').textContent = data.aboutPara2;
+            document.getElementById('display_email').textContent = data.email;
+            document.getElementById('display_email_link').href = 'mailto:' + data.email;
+            document.getElementById('display_location').textContent = data.location;
+            document.getElementById('display_linkedin').href = data.linkedin;
+            document.getElementById('display_github').textContent = data.github;
+            document.getElementById('display_github_link').href = 'https://github.com/' + data.github;
+            document.getElementById('display_footerName').textContent = data.fullName;
+            
+            // Update logo
+            const firstName = data.fullName.split(' ')[0];
+            document.getElementById('display_logo').textContent = firstName.toUpperCase() + ' M.';
+            
+            // Update profile photo
+            document.getElementById('display_profilePhoto').src = data.profilePhoto;
+            document.getElementById('profilePreview').src = data.profilePhoto;
+            
+            // Update expertise tags
+            const tagsContainer = document.getElementById('display_expertiseTags');
+            tagsContainer.innerHTML = '';
+            data.expertiseTags.split(',').forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'expertise-tag';
+                span.textContent = tag.trim();
+                tagsContainer.appendChild(span);
+            });
+            
+            // Update skills
+            const skillsContainer = document.getElementById('display_skills');
+            skillsContainer.innerHTML = '';
+            for (let i = 1; i <= 4; i++) {
+                const div = document.createElement('div');
+                div.className = 'skill-item';
+                div.innerHTML = `<strong>${data['skill' + i + 'Title']}</strong><p>${data['skill' + i + 'Desc']}</p>`;
+                skillsContainer.appendChild(div);
+            }
+            
+            // Update solutions
+            const solutionsContainer = document.getElementById('display_solutions');
+            solutionsContainer.innerHTML = '';
+            for (let i = 1; i <= 3; i++) {
+                const card = document.createElement('div');
+                card.className = 'solution-card';
+                const tags = data['sol' + i + 'Tags'].split(',').map(t => 
+                    `<span class="tag">${t.trim()}</span>`
+                ).join('');
+                card.innerHTML = `
+                    <div class="solution-icon">${data['sol' + i + 'Icon']}</div>
+                    <h3>${data['sol' + i + 'Title']}</h3>
+                    <p>${data['sol' + i + 'Desc']}</p>
+                    <div class="tags">${tags}</div>
+                `;
+                solutionsContainer.appendChild(card);
+            }
+            
+            // Update form inputs
+            Object.keys(data).forEach(key => {
+                const input = document.getElementById('edit_' + key);
+                if (input) {
+                    input.value = data[key];
+                }
+            });
+        }
+
+        // Reset to defaults
+        function resetToDefaults() {
+            if (confirm('⚠️ Reset all content to default? This cannot be undone!')) {
+                localStorage.setItem('portfolioData', JSON.stringify(defaultData));
+                updateDisplay();
+                showSaveIndicator('🔄 Reset to Defaults');
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+E to open admin
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                openAdminPanel();
+            }
+            // Escape to close admin
+            if (e.key === 'Escape' && document.getElementById('adminPanel').classList.contains('open')) {
+                closeAndSave();
+            }
+            // Enter in password field
+            if (e.key === 'Enter' && document.getElementById('securityOverlay').classList.contains('active')) {
+                if (document.activeElement.id === 'adminPassword' || document.activeElement.id === 'securityAnswer') {
+                    authenticate();
+                }
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            updateDisplay();
+            checkAuth();
+        });
+    </script>
+</body>
+</html>
